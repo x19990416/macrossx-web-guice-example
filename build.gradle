@@ -1,0 +1,50 @@
+apply plugin: 'java'
+apply plugin:'maven'
+apply plugin:'maven-publish'
+apply plugin:"com.github.johnrengelman.shadow"
+
+
+sourceCompatibility = 1.8
+
+targetCompatibility = 1.8
+
+group='rest-test'
+version='1.0'
+configurations.all {
+	// check for updates every build
+	resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+task "create-dirs" << {
+   sourceSets*.java.srcDirs*.each { it.mkdirs() }
+   sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+}
+
+repositories {
+	mavenCentral()
+	//maven { url"http://180.166.28.123:8081/nexus/content/repositories/snapshots"}
+	maven { url"http://180.166.28.123:8081/nexus/content/repositories/thirdparty/"}
+}
+
+shadowJar {
+	manifest {
+		attributes("Implementation-Title": "Gradle", "Implementation-Version": version,"Main-Class":"com.macrossx.application.Application")
+	}
+}
+
+dependencies {
+	compile 'com.google.inject:guice:4.0'
+	compile 'macrossx.guice.embedded:macrossx-guice-embedded:1.0'
+	compile 'com.sun.jersey.contribs:jersey-guice:1.19.1'
+	compile 'com.sun.jersey:jersey-json:1.19.1'
+	
+}
+
+buildscript {
+	repositories { maven { url "https://plugins.gradle.org/m2/" } }
+	dependencies { classpath "com.github.jengelman.gradle.plugins:shadow:1.2.3" }
+}
+
+
+task wrapper(type: Wrapper) { gradleVersion = '2.3' }
