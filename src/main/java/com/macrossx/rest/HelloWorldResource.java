@@ -15,28 +15,78 @@
  */
 package com.macrossx.rest;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.Map;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.groovy.control.CompilationFailedException;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
 
+import groovy.lang.Writable;
+import groovy.text.SimpleTemplateEngine;
+import groovy.text.Template;
+import groovy.text.TemplateEngine;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-@Path("rest")
+@Path("/rest")
 @Singleton
 public class HelloWorldResource {
     @GET
-    @Path("hello")
+    @Path("/hello")
     @Produces( MediaType.APPLICATION_JSON)
     public HelloBean createSimpleBean() {
         return new HelloBean("hello", System.currentTimeMillis());
     }
+    
+    @GET
+    @Path("groovy")
+    @Produces( MediaType.TEXT_HTML)
+    public String groovy() {
+
+    	TemplateEngine engine = new SimpleTemplateEngine();
+    	Template template = null;
+		try {
+			template = engine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream("/template-groovy/userinfo.groovy")));
+		} catch (CompilationFailedException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+    	//声明要绑定(或者叫合并)到模板的一个 Map 对象
+    	List<User> users =  Lists.newArrayList(new User("a","ag"),new User("b","bg"));
+    	//把模型数据归并到模板中，通过 Map 来传递参数
+    			Map map = Maps.newHashMap();
+    	map.put("title", "显示用户信息");
+    	map.put("users",users);
+    	map.put("footer","foot");
+    	Writable result = template.make(map);
+    	result.toString();
+    	//如果是作为一个 Groovylet writeTo() 语句就可以写成
+     return result.toString();
+    }
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class User{
+    	private String name;	
+    	private String gender;
+    }
+    
+    
     @XmlRootElement
     @Data
     @AllArgsConstructor

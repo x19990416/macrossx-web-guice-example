@@ -23,37 +23,39 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Binder;
 import com.google.inject.Guice;
 import com.google.inject.Module;
+import com.google.inject.servlet.ServletModule;
 import com.macrossx.embedded.BootServer;
 import com.macrossx.embedded.ServletConfig;
 import com.macrossx.embedded.jetty.JettyServer;
 import com.macrossx.rest.HelloWorldResource;
-import com.macrossx.servlet.HelloWorldServletModule;
-import com.sun.jersey.guice.JerseyServletModule;
-import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-
+import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 public class Application {
-	public static void main(String...s){
+	public static void main(String... s) {
 		BootServer server = Guice.createInjector(new Module() {
 			public void configure(Binder binder) {
+
 				binder.bind(BootServer.class).to(JettyServer.class);
-				binder.bind(EventListener.class).toInstance(new ServletConfig(){
+				binder.bind(EventListener.class).toInstance(new ServletConfig() {
 					@Override
 					public List<AbstractModule> provider() {
 						// TODO Auto-generated method stub
 						List<AbstractModule> list = Lists.newArrayList();
-						list.add(new JerseyServletModule(){
+						list.add(new ServletModule() {
+							@Override
 							protected void configureServlets() {
+								bind(ServletContainer.class).asEagerSingleton();
 								bind(HelloWorldResource.class);
-								serve("/rest/*").with(GuiceContainer.class);
-							
+								serve("/rest/*").with(ServletContainer.class);
+
 							}
 						});
-						list.add(new HelloWorldServletModule());
+						// list.add(new HelloWorldServletModule());
 						return list;
-					}});
+					}
+				});
 			}
 		}).getInstance(BootServer.class);
-		server.run();	
+		server.run();
 	}
-	}
+}

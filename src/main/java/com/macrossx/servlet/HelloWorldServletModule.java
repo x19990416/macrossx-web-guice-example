@@ -25,12 +25,18 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 
+import groovy.servlet.GroovyServlet;
+import groovy.xml.MarkupBuilder;
+
 
 public class HelloWorldServletModule extends ServletModule {
 	@Override
 	protected void configureServlets() {
 		bind(HelloWorldServlet.class);
 	    serve("/servlet/hello").with(HelloWorldServlet.class);
+	    
+		bind(GroovyServlet.class).asEagerSingleton();
+	    serve("/servlet/groovy/*.groovy").with(GroovyServlet.class);
 	}
 	
 	@Singleton

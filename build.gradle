@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin:'maven'
 apply plugin:'maven-publish'
+apply plugin:"war"
 apply plugin:"com.github.johnrengelman.shadow"
 
 
@@ -25,6 +26,7 @@ repositories {
 	mavenCentral()
 	//maven { url"http://180.166.28.123:8081/nexus/content/repositories/snapshots"}
 	maven { url"http://180.166.28.123:8081/nexus/content/repositories/thirdparty/"}
+	maven{ url 'https://oss.sonatype.org/content/repositories/snapshots'}
 }
 
 shadowJar {
@@ -38,6 +40,14 @@ dependencies {
 	compile 'macrossx.guice.embedded:macrossx-guice-embedded:1.0'
 	compile 'com.sun.jersey.contribs:jersey-guice:1.19.1'
 	compile 'com.sun.jersey:jersey-json:1.19.1'
+	compile 'org.codehaus.groovy:groovy-all:2.4.6'
+	//compile 'org.glassfish.jersey.containers:jersey-container-servlet:2.22.2'
+	//compile 'com.squarespace.jersey2-guice:jersey2-guice:0.10'
+	//compile 'com.squarespace.jersey2-guice:jersey2-guice-impl:1.0.6'
+
+
+	
+
 	
 }
 
