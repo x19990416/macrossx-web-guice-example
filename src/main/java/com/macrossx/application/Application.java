@@ -46,7 +46,6 @@ public class Application {
 						list.add(new JerseyServletModule() {
 							protected void configureServlets() {
 								bind(HelloWorldResource.class);
-								Map<String,String> map = Maps.newHashMap();
 								 serve("/*").with(GuiceContainer.class);
 
 							}
