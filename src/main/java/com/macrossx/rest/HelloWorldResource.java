@@ -17,7 +17,6 @@ package com.macrossx.rest;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -42,11 +41,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-@Path("/rest")
+@Path("rest")
 @Singleton
 public class HelloWorldResource {
     @GET
-    @Path("/hello")
+    @Path("hello")
     @Produces( MediaType.APPLICATION_JSON)
     public HelloBean createSimpleBean() {
         return new HelloBean("hello", System.currentTimeMillis());
@@ -54,13 +53,13 @@ public class HelloWorldResource {
     
     @GET
     @Path("groovy")
-    @Produces( MediaType.TEXT_HTML)
-    public String groovy() {
+    @Produces("text/plain")
+    public String  groovy() {
 
     	TemplateEngine engine = new SimpleTemplateEngine();
     	Template template = null;
 		try {
-			template = engine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream("/template-groovy/userinfo.groovy")));
+			template = engine.createTemplate(new InputStreamReader(this.getClass().getResourceAsStream("/template/groovy/userinfo.groovy")));
 		} catch (CompilationFailedException | ClassNotFoundException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -74,6 +73,7 @@ public class HelloWorldResource {
     	map.put("users",users);
     	map.put("footer","foot");
     	Writable result = template.make(map);
+    	
     	result.toString();
     	//如果是作为一个 Groovylet writeTo() 语句就可以写成
      return result.toString();

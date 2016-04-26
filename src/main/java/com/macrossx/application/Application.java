@@ -17,18 +17,20 @@ package com.macrossx.application;
 
 import java.util.EventListener;
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.inject.AbstractModule;
 import com.google.inject.Binder;
 import com.google.inject.Guice;
 import com.google.inject.Module;
-import com.google.inject.servlet.ServletModule;
 import com.macrossx.embedded.BootServer;
 import com.macrossx.embedded.ServletConfig;
 import com.macrossx.embedded.jetty.JettyServer;
 import com.macrossx.rest.HelloWorldResource;
-import com.sun.jersey.spi.container.servlet.ServletContainer;
+import com.sun.jersey.guice.JerseyServletModule;
+import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 public class Application {
 	public static void main(String... s) {
@@ -41,12 +43,11 @@ public class Application {
 					public List<AbstractModule> provider() {
 						// TODO Auto-generated method stub
 						List<AbstractModule> list = Lists.newArrayList();
-						list.add(new ServletModule() {
-							@Override
+						list.add(new JerseyServletModule() {
 							protected void configureServlets() {
-								bind(ServletContainer.class).asEagerSingleton();
 								bind(HelloWorldResource.class);
-								serve("/rest/*").with(ServletContainer.class);
+								Map<String,String> map = Maps.newHashMap();
+								 serve("/*").with(GuiceContainer.class);
 
 							}
 						});
@@ -58,4 +59,5 @@ public class Application {
 		}).getInstance(BootServer.class);
 		server.run();
 	}
+	
 }
