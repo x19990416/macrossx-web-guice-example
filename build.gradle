@@ -46,10 +46,10 @@ jar {
 		attributes(
 		"Implementation-Title": "Gradle", 
 		"Implementation-Version": version,
-		"Rsrc-Class-Path":prop,
+		"resource-Class-Path":prop,
 		"Class-Path":".",
-		"Rsrc-Main-Class":"com.macrossx.application.Application",
-		"Main-Class":"org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader" )
+		"resource-Main-Class":"com.macrossx.application.Application",
+		"Main-Class":"com.macrossx.JarResourceLoader" )
 	}
 	   println prop.name
 }
