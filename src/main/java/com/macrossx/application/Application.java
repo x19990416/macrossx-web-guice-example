@@ -17,10 +17,8 @@ package com.macrossx.application;
 
 import java.util.EventListener;
 import java.util.List;
-import java.util.Map;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.inject.AbstractModule;
 import com.google.inject.Binder;
 import com.google.inject.Guice;
@@ -46,8 +44,7 @@ public class Application {
 						list.add(new JerseyServletModule() {
 							protected void configureServlets() {
 								bind(HelloWorldResource.class);
-								 serve("/*").with(GuiceContainer.class);
-
+								serve("/*").with(GuiceContainer.class);
 							}
 						});
 						// list.add(new HelloWorldServletModule());
@@ -58,5 +55,5 @@ public class Application {
 		}).getInstance(BootServer.class);
 		server.run();
 	}
-	
+
 }
