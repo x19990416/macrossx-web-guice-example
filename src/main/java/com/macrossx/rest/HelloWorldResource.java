@@ -53,7 +53,7 @@ public class HelloWorldResource {
     
     @GET
     @Path("groovy")
-    @Produces("text/plain")
+    @Produces(MediaType.TEXT_HTML)
     public String  groovy() {
 
     	TemplateEngine engine = new SimpleTemplateEngine();
