@@ -24,7 +24,7 @@ task "create-dirs" << {
 
 repositories {
 	mavenCentral()
-	//maven { url"http://180.166.28.123:8081/nexus/content/repositories/snapshots"}
+	maven { url"http://180.166.28.123:8081/nexus/content/repositories/snapshots"}
 	maven { url"http://180.166.28.123:8081/nexus/content/repositories/thirdparty/"}
 }
 
@@ -41,7 +41,7 @@ task sync_jars() << {
 }
 
 jar {
- 
+ 	
 	manifest {
 		attributes(
 		"Implementation-Title": "Gradle", 
@@ -51,7 +51,6 @@ jar {
 		"resource-Main-Class":"com.macrossx.application.Application",
 		"Main-Class":"com.macrossx.JarResourceLoader" )
 	}
-	   println prop.name
 }
 
 
@@ -61,6 +60,7 @@ dependencies {
 	compile 'com.sun.jersey.contribs:jersey-guice:1.19.1'
 	compile 'com.sun.jersey:jersey-json:1.19.1'
 	compile 'org.codehaus.groovy:groovy-all:2.4.6'
+	compile 'com.macrossx.contribute:macrossx-guice-groovyTemplate:1.0-SNAPSHOT'
 	
 }
 

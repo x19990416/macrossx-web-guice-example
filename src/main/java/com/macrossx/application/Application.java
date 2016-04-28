@@ -22,27 +22,34 @@ import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.Binder;
 import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.macrossx.embedded.BootServer;
 import com.macrossx.embedded.ServletConfig;
 import com.macrossx.embedded.jetty.JettyServer;
 import com.macrossx.rest.HelloWorldResource;
+import com.macrossx.template.groovy.ITemplateGroovyHelper;
+import com.macrossx.template.groovy.TemplateGroovyHelper;
+import com.macrossx.template.groovy.TemplateGroovyModule;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-
-public class Application {
+	public class Application {
+	public static Injector  injector;
 	public static void main(String... s) {
-		BootServer server = Guice.createInjector(new Module() {
+		Application.injector = Guice.createInjector(new Module() {
 			public void configure(Binder binder) {
 
 				binder.bind(BootServer.class).to(JettyServer.class);
+			
 				binder.bind(EventListener.class).toInstance(new ServletConfig() {
 					@Override
-					public List<AbstractModule> provider() {
+					public List<Module> provider() {
 						// TODO Auto-generated method stub
-						List<AbstractModule> list = Lists.newArrayList();
+						List<Module> list = Lists.newArrayList();
+						
 						list.add(new JerseyServletModule() {
 							protected void configureServlets() {
+								binder.bind(ITemplateGroovyHelper.class).to(TemplateGroovyHelper.class).asEagerSingleton();
 								bind(HelloWorldResource.class);
 								serve("/*").with(GuiceContainer.class);
 							}
@@ -52,8 +59,9 @@ public class Application {
 					}
 				});
 			}
-		}).getInstance(BootServer.class);
-		server.run();
+		});
+	//	System.out.println(injector.getInstance(ITemplateGroovyHelper.class)==null);
+		injector.getInstance(BootServer.class).run();
 	}
 
 }
