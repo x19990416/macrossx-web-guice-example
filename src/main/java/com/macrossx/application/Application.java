@@ -36,32 +36,22 @@ import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 	public class Application {
 	public static Injector  injector;
 	public static void main(String... s) {
-		Application.injector = Guice.createInjector(new Module() {
+		Guice.createInjector(new Module() {
 			public void configure(Binder binder) {
-
 				binder.bind(BootServer.class).to(JettyServer.class);
-			
 				binder.bind(EventListener.class).toInstance(new ServletConfig() {
 					@Override
 					public List<Module> provider() {
-						// TODO Auto-generated method stub
-						List<Module> list = Lists.newArrayList();
-						
-						list.add(new JerseyServletModule() {
+						return Lists.newArrayList(new TemplateGroovyModule(),new JerseyServletModule() {
 							protected void configureServlets() {
-								binder.bind(ITemplateGroovyHelper.class).to(TemplateGroovyHelper.class).asEagerSingleton();
 								bind(HelloWorldResource.class);
 								serve("/*").with(GuiceContainer.class);
 							}
 						});
-						// list.add(new HelloWorldServletModule());
-						return list;
 					}
 				});
 			}
-		});
-	//	System.out.println(injector.getInstance(ITemplateGroovyHelper.class)==null);
-		injector.getInstance(BootServer.class).run();
+		}).getInstance(BootServer.class).run();
 	}
 
 }
